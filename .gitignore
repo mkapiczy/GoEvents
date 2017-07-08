@@ -1,0 +1,29 @@
+**/*.idea
+nbactions.xml
+nb-configuration.xml
+*.iml
+.settings/
+.project
+.tern-project
+bin/
+tmp/
+
+**/*.classpath
+**/target/
+**/*.metadata/*
+**/*.recommenders
+
+
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+.glide/
