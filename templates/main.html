@@ -1,0 +1,28 @@
+{{define "main"}}
+{{template "header".}}
+<div id="main">
+    <h1 class="alert alert-info">Places</h1>
+    <div class="container">
+        <form method="post" action="/getPlaces">
+            <label class="form-control-label" for="latitude">Latitude</label>
+            <input class="form-control" type="text" id="latitude" name="latitude"/>
+            <label class="form-control-label" for="longitude">Longitude</label>
+            <input class="form-control" type="text" id="longitude" name="longitude"/>
+            <label class="form-control-label" for="distance">Distance</label>
+            <input class="form-control" type="text" id="distance" name="distance"/>
+            <label class="form-control-label" for="query">Query</label>
+            <input class="form-control" type="text" id="query" name="query"/>
+            <button class="btn btn-info" type="submit">Submit</button>
+        </form>
+
+        {{with .Places}}
+        <ul>
+            {{range .}}
+            <li>{{printf "%s" .Name}}</li>
+            {{end}}
+        </ul>
+        {{end}}
+    </div>
+</div>
+{{template "footer".}}
+{{end}}
