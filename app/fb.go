@@ -7,8 +7,8 @@ import (
 )
 
 var (
-	appId       = "xxxx"
-	appSecret   = "xxxx"
+	appId       = "xxx"
+	appSecret   = "xxx"
 	accessToken = appId + "|" + appSecret
 )
 
@@ -16,14 +16,15 @@ func getPlacesByLocation(latitude string, longitude string, distance string, que
 
 	res, err := fb.Get("/search", fb.Params{
 		"access_token": accessToken,
-		"type":         "place",
 		"q":            query,
+		"type":         "place",
 		"center":       latitude + "," + longitude,
 		"distance":     distance,
 	})
 
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Println("Error during querying fb graph api", err.Error())
+		return nil
 	}
 
 	var items []fb.Result
@@ -31,7 +32,7 @@ func getPlacesByLocation(latitude string, longitude string, distance string, que
 	err = res.DecodeField("data", &items)
 
 	if err != nil {
-		fmt.Printf("An error has happened %v", err)
+		fmt.Println("Error while decoding fb graph api response", err)
 		return nil
 	}
 
@@ -39,10 +40,10 @@ func getPlacesByLocation(latitude string, longitude string, distance string, que
 	for _, item := range items {
 		fmt.Println(item["name"])
 		if str, ok := item["name"].(string); ok {
-				p := Place{Name: str}
-				places = append(places, p)
+			p := Place{Name: str}
+			places = append(places, p)
 		} else {
-			fmt.Println("Not a string!")
+			fmt.Println("Can not parse fb result item to string.")
 		}
 
 	}
