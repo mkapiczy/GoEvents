@@ -34,6 +34,21 @@ html, body {
     font-size:14px;
 }
 
+/** City autocomplete field */
+
+/*.ui-autocomplete-loading {*/
+    /*background: white url("./ui-anim_basic_16x16.gif") right center no-repeat;*/
+/*}*/
+
+#city {
+    width: 300px;
+}
+
+.ui-autocomplete {
+    position: absolute;
+    font-weight: bold;
+}
+
 
 
 
