@@ -6,11 +6,16 @@ import (
 	"os"
 	"fmt"
 	"path/filepath"
+	"strings"
+	"strconv"
+
+	json "github.com/bitly/go-simplejson"
 )
 
 var (
 	mainPath, _   = os.Getwd()
 	templatesPath = filepath.Join(mainPath, "templates")
+	googleApiUrl  = "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false"
 )
 
 func mainView(responseWriter http.ResponseWriter, request *http.Request) {
@@ -18,14 +23,37 @@ func mainView(responseWriter http.ResponseWriter, request *http.Request) {
 }
 
 func getPlacesActionHandler(responseWriter http.ResponseWriter, request *http.Request) {
-	latitude := request.FormValue("latitude")
-	longitude := request.FormValue("longitude")
-	distance := request.FormValue("distance")
+	city := request.FormValue("city")
 	query := request.FormValue("query")
+	searchDistance := "20000" // TODO: Hardcoded for now. Find better solution.
 
-	places := getPlacesByLocation(latitude, longitude, distance, query)
+	city = city[:strings.Index(request.FormValue("city"), ",")]
+	googleApiUrl = fmt.Sprintf(googleApiUrl, city)
 
-	render(responseWriter, "main", ViewData{Places: places})
+	if resp, err := http.Get(googleApiUrl); err == nil {
+		responseJson, err := json.NewFromReader(resp.Body)
+
+		if err != nil {
+			fmt.Println("Error parsing response body:", err.Error())
+			return
+		}
+
+		latitude, _:= responseJson.Get("results").GetIndex(0).Get("geometry").Get("location").Get("lat").Float64()
+		longitude,_ := responseJson.Get("results").GetIndex(0).Get("geometry").Get("location").Get("lng").Float64()
+
+		// TODO: Remove for testing purposes
+		fmt.Println(latitude)
+		fmt.Println(longitude)
+		fmt.Println(query)
+
+		places := getPlacesByLocation(strconv.FormatFloat(latitude, 'f', 6, 64), strconv.FormatFloat(longitude, 'f', 6, 64),
+			searchDistance, query)
+
+		render(responseWriter, "main", ViewData{Places: places})
+		return
+
+	}
+	render(responseWriter, "main", ViewData{})
 }
 
 func render(writer http.ResponseWriter, name string, data interface{}) {
