@@ -1,26 +1,24 @@
 {{define "main"}}
 {{template "header".}}
-<div id="wrap">
+<div class="container">
     <h1 class="alert alert-info">Places</h1>
-    <div class="container">
 
-        <form action="/getPlaces" method="POST">
-            <label class="form-control-label" for="query">Query</label>
-            <input class="form-control" type="text" id="query" name="query" placeholder="e.g. Club Party"/>
-            <label class="form-control-label" for="city">City</label>
-            <input class="form-control" type="text" id="city" name="city" placeholder="City, Country">
-            <button class="btn btn-info" type="submit">Submit</button>
-        </form>
+    <form action="/getPlaces" method="POST">
+        <label class="form-control-label" for="query">Query</label>
+        <input class="form-control" type="text" id="query" name="query" placeholder="e.g. Club Party"/>
+        <label class="form-control-label" for="city">City</label>
+        <input class="form-control" type="text" id="city" name="city" placeholder="City, Country">
+        <button class="btn btn-info" type="submit">Submit</button>
+    </form>
 
 
-        {{with .Places}}
-        <ul>
-            {{range .}}
-            <li>{{printf "%s" .Name}}</li>
-            {{end}}
-        </ul>
+    {{with .Places}}
+    <ul>
+        {{range .}}
+        <li>{{printf "%s" .Name}}</li>
         {{end}}
-    </div>
+    </ul>
+    {{end}}
 </div>
 {{template "footer".}}
 {{end}}
