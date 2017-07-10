@@ -28,9 +28,10 @@ func getPlacesActionHandler(responseWriter http.ResponseWriter, request *http.Re
 	searchDistance := "20000" // TODO: Hardcoded for now. Find better solution.
 
 	city = city[:strings.Index(request.FormValue("city"), ",")]
-	googleApiUrl = fmt.Sprintf(googleApiUrl, city)
 
-	if resp, err := http.Get(googleApiUrl); err == nil {
+	googleApiUrlWithCity := fmt.Sprintf(googleApiUrl, city)
+
+	if resp, err := http.Get(googleApiUrlWithCity); err == nil {
 		responseJson, err := json.NewFromReader(resp.Body)
 
 		if err != nil {
@@ -38,8 +39,8 @@ func getPlacesActionHandler(responseWriter http.ResponseWriter, request *http.Re
 			return
 		}
 
-		latitude, _:= responseJson.Get("results").GetIndex(0).Get("geometry").Get("location").Get("lat").Float64()
-		longitude,_ := responseJson.Get("results").GetIndex(0).Get("geometry").Get("location").Get("lng").Float64()
+		latitude, _ := responseJson.Get("results").GetIndex(0).Get("geometry").Get("location").Get("lat").Float64()
+		longitude, _ := responseJson.Get("results").GetIndex(0).Get("geometry").Get("location").Get("lng").Float64()
 
 		// TODO: Remove for testing purposes
 		fmt.Println(latitude)
