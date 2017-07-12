@@ -7,22 +7,23 @@ import (
 )
 
 var (
-	appId       = "xxx"
-	appSecret   = "xxxxx"
-	accessToken = appId + "|" + appSecret
+	appId       string
+	appSecret   string
+	accessToken string
 	globalApp   *fb.App
 	session     *fb.Session
 )
 
 func init() {
-	globalApp = fb.New(appId, appSecret)
-	globalApp.RedirectUri = "http://localhost:8000/"
-	session = globalApp.Session(accessToken)
-
-	err := session.Validate()
-	if err != nil {
-		fmt.Println("Session validation error: ", err.Error())
+	fmt.Println(config.FbAppId)
+	if config.FbAppId == "" || config.FbAppSecret == "" || config.FbRedirectUri == "" {
+		fmt.Println("AppId, AppSecret and Redirect Uri config params are required!")
 	}
+	globalApp = fb.New(config.FbAppId, config.FbAppSecret)
+	accessToken = config.FbAppId + "|" + config.FbAppSecret
+	globalApp.RedirectUri = config.FbRedirectUri
+
+	session = globalApp.Session(accessToken)
 }
 
 func getPlacesByLocation(latitude string, longitude string, distance string, query string) []Place {

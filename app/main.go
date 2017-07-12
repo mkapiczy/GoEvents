@@ -13,9 +13,9 @@ import (
 )
 
 var (
+	config        = loadConfiguration()
 	mainPath, _   = os.Getwd()
 	templatesPath = filepath.Join(mainPath, "templates")
-	googleApiUrl  = "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false"
 )
 
 func mainView(responseWriter http.ResponseWriter, request *http.Request) {
@@ -29,7 +29,7 @@ func getPlacesActionHandler(responseWriter http.ResponseWriter, request *http.Re
 
 	city = city[:strings.Index(request.FormValue("city"), ",")]
 
-	googleApiUrlWithCity := fmt.Sprintf(googleApiUrl, city)
+	googleApiUrlWithCity := fmt.Sprintf(config.GoogleApiUrl, city)
 
 	if resp, err := http.Get(googleApiUrlWithCity); err == nil {
 		responseJson, err := json.NewFromReader(resp.Body)
